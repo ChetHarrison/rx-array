@@ -27,8 +27,457 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>rx functions lovingly compiled from <a href="http://reactive-extensions.github.io/learnrx/">http://reactive-extensions.github.io/learnrx/</a></p>
+
             </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-pi">'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Strap on the map/reduce functions for rx mojo
+on to the Array prototype.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h2 id="map">map</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Applying a function to a value and creating a new 
+value is called a projection. To project one array 
+into another, we apply a projection function to 
+each item in the array and collect the results in 
+a new array.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Example:</p>
+<pre><code>newReleases.map(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(video)</span> </span>{ <span class="hljs-keyword">return</span> {id: video.id, title: video.title}; });
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-built_in">Array</span>.prototype.map = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(projectionFunction)</span> </span>{
+	<span class="hljs-keyword">var</span> results = [];
+	<span class="hljs-keyword">this</span>.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(itemInArray)</span> </span>{
+		results.push(projectionFunction(itemInArray));
+	});
+
+	<span class="hljs-keyword">return</span> results;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <h2 id="filter">filter</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Like projection, filtering an array is also a very 
+common operation. To filter an array we apply a test 
+to each item in the array and collect the items that 
+pass into a new array.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Example</p>
+<pre><code>newReleases.
+filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(video)</span> </span>{
+    <span class="hljs-keyword">return</span> video.rating === <span class="hljs-number">5.0</span>;
+})
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-built_in">Array</span>.prototype.filter = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(predicateFunction)</span> </span>{
+	<span class="hljs-keyword">var</span> results = [];
+	<span class="hljs-keyword">this</span>.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(itemInArray)</span> </span>{
+		<span class="hljs-keyword">if</span> (predicateFunction(itemInArray)) {
+			results.push(itemInArray);
+		}
+	});
+
+	<span class="hljs-keyword">return</span> results;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="mergeall">mergeAll</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Sometimes, in addition to flat arrays, we need to query 
+trees. Trees pose a challenge because we need to flatten 
+them into arrays in order to apply filter() and map() 
+operations on them. In this section we’ll define a mergeAll() 
+function that we can combine with map() and filter() to 
+query trees.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Example:</p>
+<pre><code>movieLists.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(movieList)</span> </span>{
+    <span class="hljs-keyword">return</span> movieList.videos.
+    map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(video)</span> </span>{
+        <span class="hljs-keyword">return</span> video.id;
+    });
+}).
+mergeAll();
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-built_in">Array</span>.prototype.mergeAll = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+	<span class="hljs-keyword">var</span> results = [];
+	<span class="hljs-keyword">this</span>.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(subArray)</span> </span>{
+		results.push.apply(results, subArray);
+	});
+
+	<span class="hljs-keyword">return</span> results;
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <h2 id="flatmap">flatMap</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Nearly every time we flatten a tree we chain map() 
+and mergeAll(). Sometimes, if we’re dealing with a 
+tree several levels deep, we’ll repeat this combination 
+many times in our code. To save on typing, let’s create 
+a flatMap function that’s just a map operation, followed 
+by a mergeAll.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Example</p>
+<pre><code>movieLists.
+    flatMap(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(movieList)</span> </span>{
+        <span class="hljs-keyword">return</span> movieList.videos.
+        flatMap(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(video)</span> </span>{
+            <span class="hljs-keyword">return</span> video.boxarts.
+            filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(boxart)</span> </span>{
+                <span class="hljs-keyword">return</span> boxart.width === <span class="hljs-number">150</span>;
+            }).
+            map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(boxart)</span> </span>{
+                <span class="hljs-keyword">return</span> {
+                    id: video.id,
+                    title: video.title,
+                    boxart: boxart.url
+                };
+            });
+        });
+    });
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+
+<span class="hljs-built_in">Array</span>.prototype.flatMap = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(projectionFunctionThatReturnsArray)</span> </span>{
+	<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.
+	map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(item)</span> </span>{
+		<span class="hljs-keyword">return</span> projectionFunctionThatReturnsArray(item);
+	}).</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>apply the mergeAll function to flatten the two-dimensional array</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	mergeAll();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h2 id="reduce">reduce</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Sometimes we need to perform an operation on more than one item 
+in the array at the same time. For example, let’s say we need 
+to find the largest integer in an array. We can’t use a filter() 
+operation, because it only examines one item at a time. To find 
+the largest integer we need to the compare items in the array 
+to each other.
+Example: </p>
+<pre><code><span class="hljs-keyword">var</span> ratings = [<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">1</span>,<span class="hljs-number">4</span>,<span class="hljs-number">5</span>];
+ratings.
+    reduce(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(acc, curr)</span> </span>{
+        <span class="hljs-keyword">if</span> (acc &gt; curr) {
+            <span class="hljs-keyword">return</span> acc;
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">return</span> curr;
+        }
+    });
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-built_in">Array</span>.prototype.reduce = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(combiner, initialValue)</span> </span>{
+	<span class="hljs-keyword">var</span> counter,
+		accumulatedValue;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>If the array is empty, do nothing</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.length === <span class="hljs-number">0</span>) {
+		<span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;
+	} <span class="hljs-keyword">else</span> {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>If the user didn’t pass an initial value, use the first item.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length === <span class="hljs-number">1</span>) {
+			counter = <span class="hljs-number">1</span>;
+			accumulatedValue = <span class="hljs-keyword">this</span>[<span class="hljs-number">0</span>];
+		} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt;= <span class="hljs-number">2</span>) {
+			counter = <span class="hljs-number">0</span>;
+			accumulatedValue = initialValue;
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Invalid arguments.'</span>);
+		}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Loop through the array, feeding the current value and the result of 
+the previous computation back into the combiner function until
+we’ve exhausted the entire array and are left with only one function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		<span class="hljs-keyword">while</span> (counter &lt; <span class="hljs-keyword">this</span>.length) {
+			accumulatedValue = combiner(accumulatedValue, <span class="hljs-keyword">this</span>[counter]);
+			counter++;
+		}
+
+		<span class="hljs-keyword">return</span> [accumulatedValue];
+	}
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h2 id="zip">zip</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Sometimes we need to combine two arrays by progressively 
+taking an item from each and combining the pair. If you 
+visualize a zipper, where each side is an array, and each 
+tooth is an item, you’ll have a good idea of how the zip 
+operation works.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Example:</p>
+<pre><code><span class="hljs-built_in">Array</span>.
+    zip(
+        videos,
+        bookmarks,
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(video, bookmark)</span> </span>{
+            <span class="hljs-keyword">return</span> {
+                videoId: video.id,
+                bookmarkId: bookmark.id
+            };
+        });
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-built_in">Array</span>.prototype.zip = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(left, right, combinerFunction)</span> </span>{
+	<span class="hljs-keyword">var</span> counter,
+		results = [];
+
+	<span class="hljs-keyword">for</span> (counter = <span class="hljs-number">0</span>; counter &lt; <span class="hljs-built_in">Math</span>.min(left.length, right.length); counter++) {
+		results.push(combinerFunction(left[counter], right[counter]));
+	}
+
+	<span class="hljs-keyword">return</span> results;
+};</pre></div></div>
             
         </li>
         

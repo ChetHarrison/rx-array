@@ -1,6 +1,25 @@
 ### rx-array
 
-Adds the Map/Reduce functions to the Array prototype so you can play with this style. Once your comfortable with this kind of style in a synchronous collection such as an Array. Then check out [RxJS](https://github.com/Reactive-Extensions/RxJS) to learn how the identical style can be applied to asynchronous collections like event streams. 
+Adds the Map/Reduce functions to the Array prototype so you can play with this style. Once your comfortable with this kind of style in a synchronous collection such as an Array. Then check out [RxJS](https://github.com/Reactive-Extensions/RxJS) to learn how the identical style can be applied to asynchronous collections like event streams.
+
+#### Basic Usage
+
+From the command line in your project directory
+
+`npm install rx-array`
+
+From your JS code
+
+`require('rx-array');`
+
+No need to save the reference as the global Array object prototype now has the additional functions. The following functions are now available from any array
+
+* map
+* filter
+* mergeAll
+* flatMap
+* reduce
+* zip
 
 #### Parse JSON like a champ
 

@@ -12,13 +12,13 @@ From your JS code
 
 `require('rx-array');`
 
-No need to save the reference as the global Array object prototype now has the additional functions. The following functions are now available from any array
+No need to save the reference as the global Array object prototype now has the additional functions. The following functions are now available from any array. Now it is not nice to shadow native implementations so I will not do that.
 
-* map
-* filter
+* map (native)
+* filter (native)
 * mergeAll
 * flatMap
-* reduce
+* reduce (native)
 * zip
 
 #### Parse JSON like a champ
